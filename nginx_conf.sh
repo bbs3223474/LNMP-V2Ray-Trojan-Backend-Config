@@ -1,0 +1,68 @@
+server
+    {
+        listen 80;
+        #listen [::]:80;
+        server_name sk2t.rimi.moe ;
+        index index.html index.htm index.php default.html default.htm default.php;
+        root  /home/wwwroot/v2ray;
+
+        include rewrite/none.conf;
+        #error_page   404   /404.html;
+
+        # Deny access to PHP files in specific directory
+        #location ~ /(wp-content|uploads|wp-includes|images)/.*\.php$ { deny all; }
+
+        include enable-php.conf;
+
+        location ~ .*\.(gif|jpg|jpeg|png|bmp|swf)$
+        {
+            expires      30d;
+        }
+
+        location ~ .*\.(js|css)?$
+        {
+            expires      12h;
+        }
+
+        location ~ /.well-known {
+            allow all;
+        }
+
+        location ~ /\.
+        {
+            deny all;
+        }
+
+        access_log off;
+    }
+
+server {
+  listen 443 ssl;
+  listen [::]:443 ssl;
+  
+  ssl_certificate       /usr/local/nginx/conf/ssl/sk2t.rimi.moe/fullchain.cer;
+  ssl_certificate_key   /usr/local/nginx/conf/ssl/sk2t.rimi.moe/sk2t.rimi.moe.key;
+  ssl_session_timeout 1d;
+  ssl_session_cache shared:MozSSL:10m;
+  ssl_session_tickets off;
+  
+  ssl_protocols         TLSv1.2 TLSv1.3;
+  ssl_ciphers           ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+  ssl_prefer_server_ciphers off;
+  
+  server_name           .rimi.moe;
+  location /welcome/ {
+    if ($http_upgrade != "websocket") {
+        return 404;
+    }
+    proxy_redirect off;
+    proxy_pass http://127.0.0.1:10086;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    # Show real IP in v2ray access.log
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  }
+}
