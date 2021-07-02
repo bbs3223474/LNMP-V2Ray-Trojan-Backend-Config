@@ -70,7 +70,9 @@ rm /usr/local/nginx/conf/vhost/v2r.example.com.conf
 nano /usr/local/nginx/conf/vhost/v2r.example.com.conf
 ```
 此处使用nano而不是vim的主要原因是，某些VPS在使用vim粘贴文本的时候，会出现乱码、错位的情况，此时nano就比较保险一些。
+
 4. 参照本Repo中的example.com.conf文件，将其中的内容先全部粘贴至文本编辑器中（以XShell为例，复制后按下Shift+Ins键粘贴）。
+
 5. 然后参照以下内容，对应位置进行修改：
 ```
 server
