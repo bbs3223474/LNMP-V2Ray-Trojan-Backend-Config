@@ -60,11 +60,13 @@ PHP_Modules_Options=''
 lnmp vhost add
 ```
 完成用于V2Ray和Trojan后端程序的2个网页脚本的创建，以及对应SSL证书的申请。
+
 2. 针对V2Ray，假设你创建的网站名称为“v2r.example.com”，则执行以下命令，删除默认的配置脚本：
 ```
 rm /usr/local/nginx/conf/vhost/v2r.example.com.conf
 ```
 回车后输入y，再次回车，即可删除。
+
 3. 然后执行以下命令，新建一个同名文件：
 ```
 nano /usr/local/nginx/conf/vhost/v2r.example.com.conf
@@ -102,7 +104,7 @@ server {
 ```
 nano /usr/local/nginx/conf/vhost/trj.example.com.conf
 ```
-8.将关于443端口的所有文段全部删除，从“server { listen 443 ssl;” 开始，到最后一个 “}” 结束，也就是说你要删掉如下内容：
+8. 将关于443端口的所有文段全部删除，从“server { listen 443 ssl;” 开始，到最后一个 “}” 结束，也就是说你要删掉如下内容：
 ```
 server
     {
