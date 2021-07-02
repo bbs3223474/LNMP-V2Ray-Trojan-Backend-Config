@@ -1,0 +1,35 @@
+{
+  "poseidon": {
+    "panel": "sspanel-webapi",
+    "license_key": "",
+    "nodeId": 1,
+    // every N seconds
+    "checkRate": 60,
+    "panelUrl": "https://sspanel.rimi.moe",
+    "panelKey": "msrwork",
+    "user": {
+      // inbound tag, which inbound you would like add user to
+      "inboundTag": "proxy",
+      "level": 1,
+      "alterId": 2,
+      "security": "none"
+    }
+  },
+  "log": {
+    "loglevel": "debug"
+  },
+  "inbounds": [
+    {
+      "port": 10086,
+      "protocol": "vmess",
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/welcome/"
+        }
+      },
+      "tag": "proxy"
+    }
+  ],
+  "outbounds": [{ "protocol": "freedom" }]
+}
