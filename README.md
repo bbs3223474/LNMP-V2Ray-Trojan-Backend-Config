@@ -1,5 +1,5 @@
 # LNMP+V2Ray+Trojan后端配置脚本范例
-### 写在开头：针对使用了LNMP+V2Ray-Poseidon+Soga（Trojan）后端程序的VPS，提供本人多年来摸爬滚打的经验和配置脚本案例，能解决大多数疑难杂症。
+### 写在开头：针对使用了诸如SSPanel、V2Board等前端程序，并打算使用V2Ray-Poseidon+Soga（Trojan）后端程序的VPS，提供本人多年来摸爬滚打的经验和配置脚本案例，能解决大多数疑难杂症。
 ### 本Repo仅代表个人经验，不代表标准化、规范化的操作流程。其中多数操作来自各个程序的官方说明文档或教程，在这里非常感谢LNMP、V2Ray-Poseidon和Soga程序的作者以及他们编写的说明文档。若要获取更多信息，请访问以下链接：
 - V2Ray-Poseidon: https://github.com/ColetteContreras/v2ray-poseidon
 - Soga: https://github.com/sprov065/soga
@@ -149,7 +149,7 @@ stream {
     }
 
     upstream vmess {
-        server 127.0.0.1:1444; ## 1444即对应转发到V2Ray后端的端口，这里的“1444”与第二节设置的必须一致，你也可以自行修改成其他端口号
+        server 127.0.0.1:1444; ## 1444即对应转发到V2Ray后端监听的端口，这里的“1444”与第三节第5点的端口号的必须一致，你也可以自行修改成其他端口号
     }
 
     server {
