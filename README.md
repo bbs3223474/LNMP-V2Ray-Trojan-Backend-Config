@@ -170,3 +170,110 @@ http
 ```
 lnmp restart
 ```
+#### 五、前端配置节点信息
+1. 假设前端使用来自Anankke的SSPanel-Uim，则进入管理后台-节点管理，添加一个V2Ray节点，需要配置的内容参照下述：
+```
+节点地址：节点URL;nginx监听端口号;AlterID;tls;ws;path=/welcome/|host=节点URL
+例：example.com;443;2;tls;ws;path=/welcome/|host=example.com
+
+说明：默认情况下，我们的节点URL与尾部的host是一致的，如果不是一致的估计你也不用看我这个教程了。
+nginx监听端口号参照第四节中nginx.conf的listen 443 reuseport和listen [::]:443 reuseport两行进行填写。
+path为刚才案例中提到的/welcome/，AlterID默认为2（位于v2ray的config.json内），你可以自己进行修改，但是一定要与后端配置完全一致。
+
+节点类型：V2Ray
+等级、分组、流量、限速等自行设定即可。
+```
+2. 再添加一个Trojan节点：
+```
+节点地址：节点URL;port=nginx监听端口号#soga监听端口号（即nginx转发端口号）
+例：example.com;port=443#1443
+
+说明：节点URL与V2Ray的不能相同，请参照你配置的lnmp vhost。
+443端口为nginx.conf中的listen 443 reuseport，1443则是upstream trojan中的转发端口号，以告诉soga监听1443端口而非443，避免冲突。
+
+节点类型：Trojan
+等级、分组、流量、限速等自行设定即可。
+```
+3. 至此，前端节点配置完毕。
+#### 六、安装V2Ray与Trojan后端程序
+1. 粘贴以下代码并安装V2Ray-Poseidon：
+```
+curl -o go.sh -L -s https://raw.githubusercontent.com/ColetteContreras/v2ray-poseidon/master/install-release.sh
+bash go.sh
+```
+2. 粘贴以下代码并安装Soga（Trojan后端）：
+```
+bash <(curl -Ls https://blog.sprov.xyz/soga.sh)
+```
+3. 执行以下命令，编辑V2Ray的配置文件：
+```
+vim /etc/v2ray/config.json
+```
+4. 参照本Repo中的v2ray_config.json，修改以下对应位置的内容：
+```
+{
+  "poseidon": {
+    "panel": "sspanel-webapi",
+    "license_key": "",
+    "nodeId": 1, # 参照第五节第1点创建的节点ID填写
+    // every N seconds
+    "checkRate": 60,
+    "panelUrl": "https://sspanel.exampl.com", # 改为你管理面板的URL
+    "panelKey": "muKey", # 改为你管理面板的mukey
+    "user": {
+      // inbound tag, which inbound you would like add user to
+      "inboundTag": "proxy",
+      "level": 1,
+      "alterId": 2, # 与管理面板前端设置保持一致，参见第五节
+      "security": "none"
+    }
+  },
+  "log": {
+    "loglevel": "debug"
+  },
+  "inbounds": [
+    {
+      "port": 10086, # 与第四节设置的“10086”端口保持一致，一处修改另一处也必须对应修改。
+      "protocol": "vmess",
+      "streamSettings": {
+        "network": "ws",
+        "wsSettings": {
+          "path": "/welcome/" # 与第四节设置的“/welcome/”保持一致，具体内容基本无所谓，也可以没有后面的斜杠等等，如“/123”、“/A12nFs9/”，确保完全一致包括斜杠就可以
+（略）
+```
+5. 保存退出。
+6. 执行以下命令，编辑Soga的配置文件：
+```
+vim /etc/soga/soga.conf
+```
+7. 参照本Repo中的soga.conf，修改以下对应位置中的内容：
+```
+type=sspanel-uim
+server_type=trojan # 可选v2ray或trojan，但只能选其一，不能同时工作
+api=webapi
+webapi_url=https://sspanel.example.com/ # 修改为你的管理面板URL
+webapi_mukey=muKey # 修改为你的mukey
+node_id=1 # 参照第五节第2点创建的节点ID填写
+soga_key=
+cert_file=/usr/local/nginx/conf/ssl/example.com/fullchain.cer # 将本行及以下的所有example.com修改为你的节点URL，注意不要删除第二行末尾的“.key”
+key_file=/usr/local/nginx/conf/ssl/example.com/example.com.key
+（略）
+# 注：新版soga默认提供的配置文件模板内容与本教程不完全相同，找到对应行直接修改即可，其他多出来的内容不需要修改或填写。
+```
+8. 保存退出。
+9. 至此，V2Ray与Trojan后端配置完毕。
+10. 执行以下命令，启动或重新启动后端程序：
+```
+service v2ray restart
+soga start
+```
+11. 等待约5秒后，执行以下命令，检查V2Ray后端是否正常工作：
+```
+journalctl -u v2ray
+```
+12. 按下Shift+G，跳到最后一行，用键盘方向键观察后端程序是否已获得前端用户信息（如邮箱、UUID、设备限制数等），若有，则证明对接成功。
+13. 执行以下命令，检查Trojan后端是否正常工作：
+```
+soga status
+```
+14. 若屏幕中的Status是绿色的Active，且下方日志已获取到正确的用户数，则证明对接成功。
