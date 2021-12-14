@@ -415,6 +415,7 @@ ClientAliveCountMax 999
 注：第一行为两次检测的时间间隔，第二行为“检测多少次没有操作后自动断开SSH”，单位为秒。
 ```
 修改SSH的22端口这里不做详细解释，网上已经有很多教程。个人建议一并修改，以解决22端口遭到攻击的问题（即登陆VPS时出现类似“There're xxxx times of login attempts”的提示，这就是遭到穷举法攻击了）。
+
 5. 给Root账户设置密码。
 ```
 sudo passwd root
