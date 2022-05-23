@@ -457,11 +457,12 @@ chkconfig iptables off
 
 首先，第一点很简单。Dev分支即以往的旧主题，而New-Feat分支使用了新的主页，看起来更简洁，信息密度更大，排版布局更合理。这个大家自己进行选择就好。
 接下来是第二点。经过查证，推测可能是MySQL版本的问题。官方Wiki指出安装环境推荐使用MariaDB 10.3.32+，虽然根据网上信息，MariaDB 10.3相当于MySQL 5.6和5.7的有限替代，但具体区别是什么我没有查证。且PHP这边报错的内容可能指向了类似于“开发环境支持而部署环境不支持”之类的问题，参见下列描述：
-```
+
+“
 I'm going to guess that your local XAMPP development server is running MySQL 8.0.13 or newer — or MariaDB 10.2.1 or newer. Prior to that version, MYSQL did not allow a DEFAULT value other than NULL for JSON columns. In MariaDB, JSON is an alias for LONGTEXT, which likewise (starting with version 10.2.1) allows DEFAULT values.
 
 Probably your development environment allows the defaults and the production environment doesn't. You can either upgrade your production system or not use that feature.
-```
+”
 
 所以考虑将原先的MySQL 5.7替换为MariaDB。至于版本号，不要低于Wiki要求的即可，这里我选择了LNMP一键安装脚本里的10.4.19。
 由于VPS的内存仅为1G，甚至过不去脚本的内存检测（即低于1024MB内存不允许安装MySQL 8或MariaDB 10），所以进入lnmp安装目录下的include文件夹，编辑main.sh，找到如下代码，并在开头加入井号注释掉，并wq保存退出，即可正常进行安装步骤。但为了后续操作，强烈建议添加SWAP！
