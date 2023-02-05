@@ -422,6 +422,7 @@ CFT分配的域名/你设定的path
 例：1234abcd.cloudfront.net/welcome/
 ```
 若两次均出现相同内容，如“404 Not Found”或者“Bad Request”（仅浏览器左上角出现，不能是Nginx提示的403 Bad Request），则证明CDN转发正确，可以进行后续操作。
+
 6. 复制该页面左侧的分配域名，来到SSPanel，修改你要设定CDN的节点，将节点地址改为如下格式：
 ```
 CDN域名;443;AlterID;tls;ws;path=/welcome/|host=CDN域名
