@@ -430,6 +430,8 @@ CFT分配的域名/你设定的path
 CDN域名;443;AlterID;tls;ws;path=/welcome/|host=CDN域名
 例：1234abcd.cloudfront.net;443;2;tls;ws;path=/welcome/|host=1234abcd.cloudfront.net
 
+Trojan节点仅需替换节点URL为CDN域名即可，其他默认不变。如果曾修改过SSL端口号，请改回443
+
 在配置CDN前如果你修改过SSL端口号，强烈建议你改回443，或在创建CFT分配时注意填写正确的SSL端口号。
 path遵从前文内容，需要跟你设置的完全一样。
 ```
