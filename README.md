@@ -13,7 +13,7 @@
 1. 使用CentOS Stream系统（CentOS 7已经停止支持，8也基本上处于半死不活的状态了，不建议继续使用，否则yum还得换源）
 2. 修改lnmp.conf并完成LNMP程序的安装
 3. ~~不使用CloudFlare进行CDN加速（因为我觉得这玩意对于网速、延迟比较好的服务器，在大陆地区反而减速，没什么意义。当然，挂CDN也有利于增强服务器自身的隐藏，还能避免潜在的DDoS攻击，但个人目前还没碰到V2Ray和Trojan节点被封IP的事，所以用不用看你自己），也不配置其他任何CDN~~ （可选）使用亚马逊CloudFront CDN进行加速，见：“附录1.1 使用亚马逊CloudFront CDN解决443端口被封”
-4. 让Nginx转发来自443（或其他自定义SSL端口）的请求，分别处理V2Ray和Trojan的流量，使两个后端程序可以在同一台VPS上运行不产生任何冲突
+4. 让Nginx转发来自443（或其他自定义SSL端口）的请求，分别处理~~V2Ray~~（V2Ray-Poseidon已跑路无法下载）和Trojan的流量，使两个后端程序可以在同一台VPS上运行不产生任何冲突
 5. 保留LNMP用于正常搭建网页的能力
 6. 全程使用LNMP创建网站配置、申请SSL证书
 7. （可选）解决潜在的443端口被拦截问题
@@ -206,14 +206,14 @@ path为刚才案例中提到的/welcome/，AlterID默认为2（位于v2ray的con
 ```
 3. 至此，前端节点配置完毕。
 #### 六、安装V2Ray与Trojan后端程序
-1. 粘贴以下代码并安装V2Ray-Poseidon：
+~~1. 粘贴以下代码并安装V2Ray-Poseidon：~~（弃用，V2Ray-Poseidon作者已删库跑路）
 ```
 curl -o go.sh -L -s https://raw.githubusercontent.com/ColetteContreras/v2ray-poseidon/master/install-release.sh
 bash go.sh
 ```
 2. 粘贴以下代码并安装Soga（Trojan后端）：
 ```
-bash <(curl -Ls https://blog.sprov.xyz/soga.sh)
+wget https://raw.githubusercontent.com/vaxilu/soga/master/install.sh && mv install.sh soga.sh && chmod +x soga.sh && ./soga.sh
 ```
 3. 执行以下命令，编辑V2Ray的配置文件：
 ```
